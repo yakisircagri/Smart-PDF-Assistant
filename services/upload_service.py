@@ -7,6 +7,7 @@ from langchain_chroma import Chroma
 
 from services.elastic_service import es
 
+from services.environment_service import set_document_count,set_document_metadata
 
 
 UPLOAD_DIR = "uploads"
@@ -45,6 +46,14 @@ async def upload_pdf(file):
                 "source" : file.filename
             }
         )
+
+    set_document_count(len(chunks))
+
+    set_document_metadata(
+        filename=file.filename,
+        page_count=len(documents),
+        chunk_count=len(chunks),
+    )
 
     embeddings = OpenAIEmbeddings(
         model = "text-embedding-3-small"

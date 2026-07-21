@@ -22,7 +22,7 @@ class GraphState(TypedDict):
     query : str
     chunks : list
     answer : str
-
+    messages : list
 
 
 def router(state):
@@ -163,14 +163,15 @@ builder.add_edge("generate", END)
 graph = builder.compile()
 
 
-
 @observe(name = "RAG Pipeline")
 def run_graph(query : str):
     result = graph.invoke(
         {
             "query" : query,
             "chunks" : [],
-            "answer" :""
-        }
+            "answer" :"",
+            "messages" : [],
+        },
+
     )
     return result

@@ -57,7 +57,7 @@ for message in st.session_state.messages:
 
             chunks = message.get("chunks", [])
 
-            if chunks:
+            if message.get("tool")=="citation" and chunks:
 
                 with st.expander("Chunks"):
 
@@ -103,21 +103,23 @@ if question :
 
     chunks = data["chunks"]
 
-
+    tool = data["tool"]
 
     with st.chat_message("assistant") :
 
         st.markdown(answer)
 
-        with st.expander("Retrieved Chunks") :
+        if tool == "citation" :
 
-            for chunk in chunks :
+            with st.expander("Retrieved Chunks") :
 
-                st.markdown(f"**Page:** {chunk['page']}")
+                for chunk in chunks :
 
-                st.write(chunk["text"])
+                    st.markdown(f"**Page:** {chunk['page']}")
 
-                st.divider()
+                    st.write(chunk["text"])
+
+                    st.divider()
 
 
     st.session_state.messages.append(
@@ -125,5 +127,6 @@ if question :
             "role" : "assistant",
             "content" : answer,
             "chunks" : chunks,
+            "tool" : tool
         }
     )
